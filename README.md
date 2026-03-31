@@ -4,15 +4,6 @@ A full-stack climate analytics platform that collects real-time weather data, st
 
 ---
 
-## 📊 Dashboard
-
-![Dashboard](screenshots/Temperature.png)
-![Temperature](screenshots/Temperature.png)
-![Humidity](screenshots/humidity.png)
-![Wind Speed](screenshots/wind_speed.png)
-
----
-
 ## 🚀 Features
 
 - Real-time weather data collection
@@ -60,6 +51,14 @@ Dashboard (Chart.js)
 
 ---
 
+## 📊 Dashboard
+
+![Dashboard](screenshots/Temperature.png)
+![Humidity](screenshots/humidity.png)
+![Wind Speed](screenshots/wind_speed.png)
+
+---
+
 ## 📡 API Endpoints
 
 ### Fetch Weather
@@ -102,7 +101,7 @@ Detects heatwave risk based on temperature patterns.
 
 ## FastAPI Swagger UI
 
-![SwaggerUI](screenshots/API_endpoints.png)
+![SwaggerUI](screenshots/api_endpoints.png)
 
 ---
 
