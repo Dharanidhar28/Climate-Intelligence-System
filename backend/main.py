@@ -1,19 +1,24 @@
+import os
+
 from fastapi import FastAPI, Depends
+from fastapi.responses import FileResponse
 from sqlalchemy.orm import Session
+from fastapi.staticfiles import StaticFiles
 
-import models
-import schemas
-import crud
+import backend.models
+import backend.schemas
+import backend.crud
 
-from database import engine, get_db
-from weather_service import fetch_weather
-from analytics_service import analyze_city_weather
-from analytics_service import detect_heatwave
+from backend.database import engine, get_db
+from backend.weather_service import fetch_weather
+from backend.analytics_service import analyze_city_weather
+from backend.analytics_service import detect_heatwave
 from fastapi.middleware.cors import CORSMiddleware
-from analytics_service import get_weather_history
-from scheduler import scheduler
+from backend.analytics_service import get_weather_history
+from backend.scheduler import scheduler
 
 app = FastAPI()
+
 
 scheduler.start()
 
@@ -33,8 +38,12 @@ app.add_middleware(
 )
 
 
-models.Base.metadata.create_all(bind=engine)
+backend.models.Base.metadata.create_all(bind=engine)
 
+
+@app.get("/")
+def home():
+    return FileResponse(os.path.join(FRONTEND_DIR, "index.html"))
 
 @app.get("/")
 def root():
@@ -42,26 +51,31 @@ def root():
 
 
 @app.post("/weather")
-def add_weather(weather: schemas.WeatherCreate, db: Session = Depends(get_db)):
-    return crud.create_weather(db, weather)
+def add_weather(weather: backend.schemas.WeatherCreate, db: Session = Depends(get_db)):
+    return backend.crud.create_weather(db, weather)
 
 @app.post("/weather/fetch/{city}")
 def fetch_and_store_weather(city: str, db: Session = Depends(get_db)):
 
     weather_data = fetch_weather(city)
 
-    weather = schemas.WeatherCreate(**weather_data)
+    weather = backend.schemas.WeatherCreate(**weather_data)
 
-    return crud.create_weather(db, weather)
+    return backend.crud.create_weather(db, weather)
 
 @app.get("/analytics/{city}")
 def get_city_analytics(city: str, db: Session = Depends(get_db)):
-    return analyze_city_weather(db, city)
+    return backend.analytics_service.analyze_city_weather(db, city)
 
 @app.get("/heatwave/{city}")
 def heatwave_alert(city: str, db: Session = Depends(get_db)):
-    return detect_heatwave(db, city)
+    return backend.analytics_service.detect_heatwave(db, city)
 
 @app.get("/history/{city}")
 def weather_history(city: str, db: Session = Depends(get_db)):
-    return get_weather_history(db, city)
+    return backend.analytics_service.get_weather_history(db, city)
+
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+FRONTEND_DIR = os.path.join(BASE_DIR, "..", "frontend")
+
+app.mount("/static", StaticFiles(directory=FRONTEND_DIR), name="static")

@@ -1,5 +1,5 @@
 from sqlalchemy.orm import Session
-from models import WeatherData
+from backend.models import WeatherData
 
 
 def create_weather(db: Session, weather):

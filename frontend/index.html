@@ -4,7 +4,7 @@
 <head>
     <title>Climate Intelligence Dashboard</title>
 
-    <link rel="stylesheet" href="style.css">    
+    <link rel="stylesheet" href="static/style.css">    
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 </head>
@@ -18,6 +18,8 @@
 <button onclick="loadWeather()">Load Data</button>
 </div>
 
+<div id="heatwaveAlert"></div>
+
 <div class="charts">
 
 <canvas id="tempChart"></canvas>
@@ -26,9 +28,9 @@
 
 </div>
 
-<div id="heatwaveAlert"></div>
 
-<script src="script.js"></script>
+
+<script src="static/script.js"></script>
 
 </body>
 </html>

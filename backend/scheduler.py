@@ -1,8 +1,8 @@
 from apscheduler.schedulers.background import BackgroundScheduler
-from weather_service import fetch_weather
-from database import SessionLocal
-import crud
-import schemas
+from backend.weather_service import fetch_weather
+from backend.database import SessionLocal
+import backend.crud
+import backend.schemas
 
 
 cities = ["delhi", "chennai", "mumbai","kolkata", "bangalore", "hyderabad", "ahmedabad", "pune", "jaipur", "lucknow"]

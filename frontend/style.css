@@ -27,6 +27,8 @@ button{
     }
 
 .charts{
+    height:45%;
+    width: 70%;
     display:grid;
     grid-template-columns:1fr 1fr;
     gap:30px;
