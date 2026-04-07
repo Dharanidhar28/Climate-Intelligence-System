@@ -12,7 +12,7 @@ async function loadWeather() {
 }
 
 async function checkHeatwave(city) {
-	const response = await fetch(`http://127.0.0.1:8000/heatwave/${city}`);
+	const response = await fetch(`${API_BASE_URL}/heatwave/${city}`);
 	const data = await response.json();
 
 	console.log("Heatwave:", data);
@@ -29,7 +29,7 @@ async function checkHeatwave(city) {
 }
 
 async function fetchAndUpdate(city) {
-	const response = await fetch(`http://127.0.0.1:8000/history/${city}`);
+	const response = await fetch(`${API_BASE_URL}/history/${city}`);
 	const data = await response.json();
 
 	console.log(data);

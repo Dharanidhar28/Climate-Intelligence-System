@@ -22,16 +22,11 @@ app = FastAPI()
 
 scheduler.start()
 
-origins = [
-    "http://127.0.0.1",
-    "http://localhost",
-]
-
 
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],   # allow all for development
+    allow_origins=["*"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
