@@ -1,6 +1,7 @@
 import requests
 import os
 from dotenv import load_dotenv
+from requests import RequestException
 
 load_dotenv()
 
@@ -10,7 +11,13 @@ def fetch_weather(city: str):
 
     url = f"https://api.openweathermap.org/data/2.5/weather?q={city}&appid={API_KEY}&units=metric"
 
-    response = requests.get(url, timeout=15)
+    session = requests.Session()
+    session.trust_env = False
+
+    try:
+        response = session.get(url, timeout=15)
+    except RequestException as exc:
+        raise RuntimeError(f"Unable to reach OpenWeather API: {exc}") from exc
 
     data = response.json()
 
