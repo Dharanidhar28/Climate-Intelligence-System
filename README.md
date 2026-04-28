@@ -51,13 +51,6 @@ Dashboard (Chart.js)
 
 ---
 
-## 📊 Dashboard
-
-![Dashboard](screenshots/Temperature.png)
-![Humidity](screenshots/humidity.png)
-![Wind Speed](screenshots/wind_speed.png)
-
----
 
 ## 📡 API Endpoints
 
