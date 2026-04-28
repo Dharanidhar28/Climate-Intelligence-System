@@ -1,36 +1,177 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Climate Intelligence Dashboard</title>
-
-    <link rel="stylesheet" href="static/style.css">    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/style.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
 </head>
 
 <body>
+    <div class="page-shell">
+        <header class="hero">
+            <div class="hero-copy">
+                <p class="eyebrow">Climate intelligence system</p>
+                <h1>Track city weather from 5 AM to the present time.</h1>
+                <p class="hero-text">
+                    Search any city to view current conditions, see how temperature, humidity, and wind changed through the day,
+                    and receive safety measures based on the latest weather pattern.
+                </p>
+                <div class="search-row">
+                    <input id="city" placeholder="Search a city like Delhi, Chennai, or Mumbai">
+                    <button onclick="loadWeather()">Analyze Weather</button>
+                </div>
+                <div class="hero-meta">
+                    <span id="statusBadge" class="status-badge neutral">Ready</span>
+                    <span id="windowLabel" class="window-label">5 AM to present time</span>
+                </div>
+            </div>
+            <div class="hero-side">
+                <div class="glass-panel">
+                    <p class="panel-kicker">Current city</p>
+                    <h2 id="cityName">No city selected</h2>
+                    <p id="conditionText" class="condition-text">Search a city to load the latest climate view.</p>
+                    <div class="time-strip">
+                        <div>
+                            <span>Start</span>
+                            <strong id="windowStart">--</strong>
+                        </div>
+                        <div>
+                            <span>Now</span>
+                            <strong id="windowEnd">--</strong>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
 
-<h1>Climate Intelligence Dashboard</h1>
+        <main class="dashboard">
+            <section class="overview-grid">
+                <article class="glass-card">
+                    <div class="section-head">
+                        <div>
+                            <p class="section-kicker">Present weather</p>
+                            <h3 id="conditionBadge">Awaiting data</h3>
+                        </div>
+                        <div id="heatwaveAlert" class="alert-pill neutral">No analysis yet</div>
+                    </div>
+                    <div class="metric-grid">
+                        <div class="metric-card warm">
+                            <span>Temperature</span>
+                            <strong id="currentTemp">--</strong>
+                        </div>
+                        <div class="metric-card cool">
+                            <span>Humidity</span>
+                            <strong id="currentHumidity">--</strong>
+                        </div>
+                        <div class="metric-card breeze">
+                            <span>Wind Speed</span>
+                            <strong id="currentWind">--</strong>
+                        </div>
+                        <div class="metric-card neutral-card">
+                            <span>Feels Like</span>
+                            <strong id="feelsLike">--</strong>
+                        </div>
+                        <div class="metric-card neutral-card">
+                            <span>Pressure</span>
+                            <strong id="pressure">--</strong>
+                        </div>
+                        <div class="metric-card neutral-card">
+                            <span>Records Today</span>
+                            <strong id="recordCount">--</strong>
+                        </div>
+                    </div>
+                </article>
 
-<div class="controls">
-<input id="city" placeholder="Enter city">
-<button onclick="loadWeather()">Load Data</button>
-</div>
+                <article class="glass-card">
+                    <div class="section-head">
+                        <div>
+                            <p class="section-kicker">Weather analysis</p>
+                            <h3>Daily summary</h3>
+                        </div>
+                    </div>
+                    <div class="summary-grid">
+                        <div class="summary-item">
+                            <span>Average Temp</span>
+                            <strong id="avgTemp">--</strong>
+                        </div>
+                        <div class="summary-item">
+                            <span>Max Temp</span>
+                            <strong id="maxTemp">--</strong>
+                        </div>
+                        <div class="summary-item">
+                            <span>Min Temp</span>
+                            <strong id="minTemp">--</strong>
+                        </div>
+                        <div class="summary-item">
+                            <span>Trend</span>
+                            <strong id="tempTrend">--</strong>
+                        </div>
+                    </div>
+                    <p id="analysisText" class="analysis-text">
+                        Weather analysis will appear here after you search for a city.
+                    </p>
+                </article>
+            </section>
 
-<div id="heatwaveAlert"></div>
+            <section class="glass-card chart-section">
+                <div class="section-head">
+                    <div>
+                        <p class="section-kicker">Today timeline</p>
+                        <h3>Weather data from 5 AM to present time</h3>
+                    </div>
+                </div>
+                <div class="charts">
+                    <article class="chart-card">
+                        <h4>Temperature</h4>
+                        <canvas id="tempChart"></canvas>
+                    </article>
+                    <article class="chart-card">
+                        <h4>Humidity</h4>
+                        <canvas id="humidityChart"></canvas>
+                    </article>
+                    <article class="chart-card full-width">
+                        <h4>Wind Speed</h4>
+                        <canvas id="windChart"></canvas>
+                    </article>
+                </div>
+            </section>
 
-<div class="charts">
+            <section class="bottom-grid">
+                <article class="glass-card">
+                    <div class="section-head">
+                        <div>
+                            <p class="section-kicker">Safety measures</p>
+                            <h3>Recommended precautions</h3>
+                        </div>
+                    </div>
+                    <ul id="safetyList" class="safety-list">
+                        <li>Search a city to get safety guidance.</li>
+                    </ul>
+                </article>
 
-<canvas id="tempChart"></canvas>
-<canvas id="humidityChart"></canvas>
-<canvas id="windChart"></canvas>
+                <article class="glass-card">
+                    <div class="section-head">
+                        <div>
+                            <p class="section-kicker">Recent searches</p>
+                            <h3>Searched cities</h3>
+                        </div>
+                    </div>
+                    <div id="searchedCities" class="chip-row">
+                        <span class="empty-chip">No cities searched yet</span>
+                    </div>
+                </article>
+            </section>
+        </main>
+    </div>
 
-</div>
-
-
-
-<script src="/static/script.js"></script>
-<script src="/static/config.js"></script>
+    <script src="/static/config.js"></script>
+    <script src="/static/script.js"></script>
 </body>
+
 </html>

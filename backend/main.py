@@ -40,7 +40,7 @@ backend.models.Base.metadata.create_all(bind=engine)
 def home():
     return FileResponse(os.path.join(FRONTEND_DIR, "index.html"))
 
-@app.get("/")
+@app.get("/api")
 def root():
     return {"message": "Climate Intelligence System API"}
 
