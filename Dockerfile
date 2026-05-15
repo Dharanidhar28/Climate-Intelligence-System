@@ -18,8 +18,15 @@ RUN pip install --no-cache-dir -r requirements.txt
 # 6. Copy the entire project into the container
 COPY . .
 
-# 7. Tell Docker which port the app runs on
+# 7. Create a non-root user and give ownership of /app
+RUN groupadd -r appuser && useradd -r -g appuser appuser && \
+    chown -R appuser:appuser /app
+
+# 8. Switch to non-root user
+USER appuser
+
+# 9. Tell Docker which port the app runs on
 EXPOSE 10000
 
-# 8. The command to start your FastAPI app
+# 10. The command to start your FastAPI app
 CMD ["uvicorn", "backend.main:app", "--host", "0.0.0.0", "--port", "10000"]

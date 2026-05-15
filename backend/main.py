@@ -19,6 +19,8 @@ from backend.scheduler import scheduler
 
 app = FastAPI()
 
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+FRONTEND_DIR = os.path.join(BASE_DIR, "..", "frontend")
 
 app.add_middleware(
     CORSMiddleware,
@@ -29,12 +31,13 @@ app.add_middleware(
 )
 
 
-backend.models.Base.metadata.create_all(bind=engine)
+if not os.getenv("TESTING"):
+    backend.models.Base.metadata.create_all(bind=engine)
 
 
 @app.on_event("startup")
 def start_scheduler():
-    if not scheduler.running:
+    if not os.getenv("TESTING") and not scheduler.running:
         scheduler.start()
 
 
