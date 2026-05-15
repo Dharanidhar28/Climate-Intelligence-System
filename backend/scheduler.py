@@ -1,4 +1,5 @@
 from apscheduler.schedulers.background import BackgroundScheduler
+from zoneinfo import ZoneInfo
 
 import backend.crud as crud
 import backend.schemas as schemas
@@ -19,6 +20,8 @@ cities = [
     "lucknow",
 ]
 
+SCHEDULER_TIMEZONE = ZoneInfo("Asia/Kolkata")
+
 
 def collect_weather():
     db = SessionLocal()
@@ -36,5 +39,14 @@ def collect_weather():
         db.close()
 
 
-scheduler = BackgroundScheduler()
-scheduler.add_job(collect_weather, "cron", hour="5-23", minute="0,30")
+scheduler = BackgroundScheduler(timezone=SCHEDULER_TIMEZONE)
+scheduler.add_job(
+    collect_weather,
+    "cron",
+    hour="0-23",
+    minute="0,30",
+    id="collect_weather_half_hourly",
+    replace_existing=True,
+    coalesce=True,
+    misfire_grace_time=1800,
+)

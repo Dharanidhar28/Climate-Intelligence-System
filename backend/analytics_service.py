@@ -7,6 +7,9 @@ from sqlalchemy.orm import Session
 from backend.models import WeatherData
 from backend.weather_service import fetch_weather
 
+DAY_START_HOUR = 0
+DAY_WINDOW_LABEL = "12 AM to present time"
+
 
 def analyze_city_weather(db: Session, city: str):
     weather_records = db.query(WeatherData).filter(
@@ -63,7 +66,7 @@ def _local_time(timestamp: datetime, timezone_offset: int):
 
 def _get_today_window(timezone_offset: int):
     local_now = datetime.utcnow() + timedelta(seconds=timezone_offset)
-    local_start = local_now.replace(hour=5, minute=0, second=0, microsecond=0)
+    local_start = local_now.replace(hour=DAY_START_HOUR, minute=0, second=0, microsecond=0)
     return local_start, local_now
 
 
@@ -97,7 +100,7 @@ def _build_safety_measures(current_weather, summary, heatwave):
         measures.append("Strong winds are present. Secure loose objects and ride carefully if travelling.")
 
     if summary["temperature_trend"] == "rising":
-        measures.append("Conditions are warming up since 5 AM, so earlier outdoor plans are safer than later ones.")
+        measures.append("Conditions are warming up since midnight, so earlier outdoor plans are safer than later ones.")
     elif summary["temperature_trend"] == "falling":
         measures.append("Conditions are easing compared with earlier today, which may improve outdoor comfort.")
 
@@ -110,7 +113,7 @@ def _build_analysis(city, current_weather, summary, heatwave):
     return (
         f"{city.title()} is currently experiencing {current_weather['description']} conditions with "
         f"{current_weather['temperature']:.1f}°C temperature, {current_weather['humidity']:.0f}% humidity, "
-        f"and {current_weather['wind_speed']:.1f} m/s wind. Since 5 AM, the temperature has ranged from "
+        f"and {current_weather['wind_speed']:.1f} m/s wind. Since midnight, the temperature has ranged from "
         f"{summary['min_temperature']:.1f}°C to {summary['max_temperature']:.1f}°C and is trending "
         f"{summary['temperature_trend']}. {heatwave_text}"
     )
@@ -204,7 +207,7 @@ def get_weather_history(db: Session, city: str):
         "time_window": {
             "start_local": window_start.isoformat(),
             "end_local": local_now.isoformat(),
-            "label": "5 AM to present time",
+            "label": DAY_WINDOW_LABEL,
         },
         "analysis": _build_analysis(city, current_weather, summary, heatwave),
         "safety_measures": _build_safety_measures(current_weather, summary, heatwave),
