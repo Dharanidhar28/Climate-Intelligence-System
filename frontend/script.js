@@ -175,7 +175,7 @@ async function loadWeather(selectedCity = null) {
 		rememberCity(data.city);
 		updateSummary(data);
 		updateCharts(data.history);
-		setStatus(`Showing ${data.city} weather from 5 AM to now`, "success");
+		setStatus(`Showing ${data.city} weather from 12 AM to now`, "success");
 	} catch (error) {
 		console.error(error);
 		setStatus("Unable to load weather data.", "error");

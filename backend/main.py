@@ -19,10 +19,8 @@ from backend.scheduler import scheduler
 
 app = FastAPI()
 
-
-scheduler.start()
-
-
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+FRONTEND_DIR = os.path.join(BASE_DIR, "..", "frontend")
 
 app.add_middleware(
     CORSMiddleware,
@@ -33,12 +31,41 @@ app.add_middleware(
 )
 
 
-backend.models.Base.metadata.create_all(bind=engine)
+if not os.getenv("TESTING"):
+    backend.models.Base.metadata.create_all(bind=engine)
+
+
+@app.on_event("startup")
+def start_scheduler():
+    if not os.getenv("TESTING") and not scheduler.running:
+        scheduler.start()
+
+
+@app.on_event("shutdown")
+def stop_scheduler():
+    if scheduler.running:
+        scheduler.shutdown(wait=False)
 
 
 @app.get("/")
 def home():
     return FileResponse(os.path.join(FRONTEND_DIR, "index.html"))
+
+
+@app.get("/style.css")
+def style_file():
+    return FileResponse(os.path.join(FRONTEND_DIR, "style.css"))
+
+
+@app.get("/config.js")
+def config_file():
+    return FileResponse(os.path.join(FRONTEND_DIR, "config.js"))
+
+
+@app.get("/script.js")
+def script_file():
+    return FileResponse(os.path.join(FRONTEND_DIR, "script.js"))
+
 
 @app.get("/api")
 def root():
