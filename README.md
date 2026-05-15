@@ -1,139 +1,36 @@
-# 🌍 Climate Intelligence System
+🌍 Climate Intelligence System
+A high-frequency data pipeline and analytics dashboard that monitors global weather patterns, predicts heatwaves, and visualizes climate trends.
 
-A full-stack climate analytics platform that collects real-time weather data, stores it in a PostgreSQL database, performs climate analysis, and visualizes results using a live dashboard.
+🚀 Key Features
+Real-time Data Pipeline: Automated ingestion from OpenWeather API every 30 minutes.
 
----
+Time-Series Analytics: Historical tracking of temperature, humidity, and wind speed.
 
-## 🚀 Features
+Heatwave Detection: Backend logic to analyze and alert on extreme temperature spikes.
 
-- Real-time weather data collection
-- Automated weather data pipeline
-- Climate trend analysis
-- Heatwave detection
-- Live monitoring dashboard
-- Automatic data refresh
+Interactive Visualization: Dynamic graphs powered by Chart.js.
 
----
+🛠️ Technical Stack
+Backend: FastAPI (Python 3.12)
 
-## ⚙️ Tech Stack
+Database: PostgreSQL (Supabase) with SQLAlchemy ORM
 
-### Backend
-- FastAPI
-- PostgreSQL
-- SQLAlchemy
-- APScheduler
+Deployment: Dockerized for environment parity
 
-### Data Analysis
-- Pandas
-- NumPy
+Infrastructure: Hosted on Render with Connection Pooling (Supavisor)
 
-### Frontend
-- HTML
-- JavaScript
-- Chart.js
+🧠 Challenges Overcome (The "DevOps" Story)
+Database Migration: Successfully migrated from local SQLite to cloud-based PostgreSQL while managing persistent data storage.
 
-### External APIs
-- OpenWeather API
+Cloud Networking: Resolved IPv6/IPv4 routing incompatibilities between Render and Supabase by implementing Session Pooling on port 6543.
 
----
+Containerization: Fully Dockerized the application to ensure seamless deployment and scalability.
 
-## 🏗 System Architecture
-
-Weather API  
-↓  
-FastAPI Backend  
-↓  
-PostgreSQL Database  
-↓  
-Pandas Analytics  
-↓  
-Dashboard (Chart.js)
-
----
-
-
-## 📡 API Endpoints
-
-### Fetch Weather
-
-POST /weather/fetch/{city}
-
-
-Fetches weather data and stores it in the database.
-
----
-
-### Weather History
-
-
-GET /history/{city}
-
-
-Returns historical weather data.
-
----
-
-### Climate Analytics
-
-GET /analytics/{city}
-
-
-Returns average, max, and min temperature.
-
----
-
-### Heatwave Detection
-
-
-GET /heatwave/{city}
-
-
-Detects heatwave risk based on temperature patterns.
-
----
-
-## FastAPI Swagger UI
-
-![SwaggerUI](screenshots/api_endpoints.png)
-
----
-
-## API Docs
-
-http://127.0.0.1:8000/docs
-
----
-
-## ⚡ Installation
-
-Clone the repository
-
-
-git clone https://github.com/dharanidhar28/climate-intelligence-system.git
-
-Install dependencies
-
-
-pip install -r requirements.txt
-
-
-Run the backend
-
-
-uvicorn main:app --reload
-
-
-Open dashboard
-
-
-frontend/index.html
-
-
----
-
-## 📈 Future Improvements
-
-- Machine learning based climate prediction
-- Cloud deployment
-- Real-time streaming data
-- Advanced climate analytics
+📦 How to Run (Local Docker)
+Bash
+docker build -t climate-app .
+docker run -p 8000:10000 \
+  -e DATABASE_URL="your_supabase_url" \
+  -e OPENWEATHER_API_KEY="your_api_key" \
+  climate-app
+Access the API at http://localhost:8000/docs
